@@ -1,38 +1,327 @@
-.App {
-  text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
+/* Dashboard Layout */
+.dashboard {
+  display: flex;
+  flex-direction: column;
   min-height: 100vh;
+  font-family: 'Arial', sans-serif; /* Consistent font */
+  padding-bottom: 100px; /* Space to prevent overlap with footer */
+  position: relative; /* Ensure the container allows child elements to position relatively */
+}
+
+/* Title Container Styling */
+.title-container {
+  display: flex; /* Arrange logo and title horizontally */
+  align-items: center; /* Vertically center content */
+  justify-content: space-between; /* Space between elements */
+  background-color: #293e53; /* Dark background for the title bar */
+  padding: 10px 20px; /* Padding around elements */
+  width: 100%; /* Full width of the bar */
+  height: 80px; /* Height of the title bar */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Optional shadow */
+  position: absolute; /* Fix at the top of the page */
+  top: 0; /* Align to the top of the viewport */
+  z-index: 10; /* Ensure it stays above other elements */
+}
+
+/* Logo Styling */
+.logo {
+  width: 60px; /* Adjust logo size */
+  height: auto; /* Maintain aspect ratio */
+  margin-right: 20px; /* Space between logo and title */
+}
+
+/* Dashboard Title Styling */
+.dashboard-title {
+  font-size: 35px; /* Adjust font size */
+  font-weight: bold;
+  color: #ffffff; /* Contrast with the dark bar */
+  margin: 0; /* Remove default margin */
+  text-align: center;
+  flex: 1; /* Ensures the title occupies the center space */
+}
+
+/* Ensures alignment within the title container */
+.title-container img,
+.title-container h1 {
+  display: inline-block;
+}
+
+/* Reset margins and padding */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box; /* Ensures consistent box sizing */
+}
+
+body, html {
+  height: 100%; /* Ensure the body takes full height */
+  background-color: #f4f4f4; /* Subtle background for contrast */
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Sidebar */
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 200px;
+  height: 100vh;
+  background-color: #293e53;
+  color: white;
+  padding: 20px;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  z-index: 1; /* Ensure sidebar stays on top of main content */
+  overflow-y: auto; /* Enable scrolling for long menus */
+}
+
+.sidebar h2 {
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.sidebar .dropdown-menu {
+  margin-bottom: 20px;
+}
+
+.sidebar label {
+  display: block;
+  margin-top: 10px;
+}
+
+.sidebar select {
+  width: 100%;
+  padding: 5px;
+  margin-top: 5px;
+  border: none;
+  border-radius: 5px;
+}
+
+/* Chart Container Styling, for all charts*/
+.chart {
+  flex: 1;
+  width: 300px; /* Consistent width */
+  max-width: 100%;
+  height: 300px; /* Height to maintain aspect ratio */
+  max-height: 320px; /* Flexible height limit */
+  background-color: #ffffff;
+  padding: 10px;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  margin: 5px; /* Spacing between charts */
+  overflow: hidden; /* Prevent clipping */
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  transition: transform 0.3s ease, box-shadow 0.3s ease; /* Adds hover effect */
 }
 
-.App-link {
-  color: #61dafb;
+.chart:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+/* Chart Styling */
+.chart canvas {
+  max-width: 100%; /* Ensure canvas fits within its container */
+  max-height: 100%; /* Maintain aspect ratio */
+}
+
+/* Filtered Charts Container */
+.selected-chart-container {
+  margin-left: 220px;
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding-bottom: 20px;
+  overflow: hidden;
+}
+
+/* Overall Charts Container */
+.overall-chart-container {
+  margin-left: 400px;
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding: 20px;
+  overflow: hidden; /* Ensure content is not clipped */
+}
+/* Dashboard Footer Styling */
+.dashboard-footer {
+  position: relative;
+  bottom: 0;
+  right: 0; /* Aligns to the bottom right */
+  width: auto; /* Adjust width if needed */
+  color: #1a1818;
+  text-align: center; /* Center text within the footer */
+  padding: 10px 20px; /* Adjust padding */
+  z-index: 5;
+  flex-shrink: 0;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .main-content {
+    margin-left: 60px; /* Adjust for smaller screens */
   }
-  to {
-    transform: rotate(360deg);
+
+  .dashboard-title {
+    padding-left: 60px; /* Center title relative to smaller sidebar */
+  }
+
+  .selected-chart-container,
+  .overall-chart-container {
+    flex-direction: column; /* Stack charts vertically */
+  }
+
+  .chart {
+    width: 100%; /* Full width for small screens */
+    margin: 10px 0;
   }
 }
+
+.summary-row {
+  display: flex;
+  justify-content: center;
+  margin: 20px 0;
+  gap: 10px;
+  padding: 10px 20px;
+  background-color: #436280; /*card components on top*/
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.widget {
+  flex: 1;
+  margin: 5px;
+  text-align: center;
+  background-color: #ffffff;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.widget p {
+  font-size: 1.5rem;
+  margin: 5px 0;
+}
+
+.filtered-chart-container, .overall-chart-container {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  margin: 20px 0;
+}
+
+.chart-row {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin: 20px 0;
+  flex-wrap: wrap;
+}
+
+.chart {
+  width: 300px;
+  height: 300px;
+  flex: 1; /* Ensures the chart takes up available space */
+  max-width: 400px; /* Set the desired width */
+  height: 450px; /* Set a consistent height for the chart */
+}
+
+.chart-container {
+  display: flex;
+  align-items: flex-start;
+  gap: 30px; /* Adjusts spacing between the chart and the card */
+}
+
+.card {
+  width: 300px; /* Adjust width of the card */
+  height: 317px; /* Match the height of the chart */
+  padding: 10px;
+  border: 1px solid #dddddd;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* Center content vertically */
+  align-items: center; /* Center content horizontally */
+  margin: 10px; /* Optional margin to separate cards */
+  transition: transform 0.3s ease, box-shadow 0.3s ease; /* Adds hover effect */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+.card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Header Styling */
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 60px;
+  background-color: #ffffff; /* Adjust as per your theme */
+  z-index: 1000;
+  margin: 0; /* Remove extra margins */
+  padding: 0;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Optional */
+}
+
+/* Main Content Styling */
+.main-content {
+  margin-left: 180px; /* Match the sidebar width */
+  margin-top: 60px; /* Match the header height */
+  padding: 20px;
+  background-color: #f9f9f9; /* Optional */
+  overflow-x: hidden; /* Prevent horizontal scrolling */
+  flex: 1;
+  padding-top: 100px;
+  padding: 20px; /*  for the spcae between title and cards component */
+  background-color: #f9f9f9; /* Optional */
+}
+
+/* Body Styling to Prevent Horizontal Scrolling */
+body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  overflow-x: hidden; /* Prevent horizontal scroll */
+}
+/* Adjusted for tighter spacing between charts */
+.selected-chart-container,
+.overall-chart-container {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  margin: 10px 0; /* Reduced margin to minimize vertical space */
+  padding: 10px 0; /* Reduced padding */
+  gap: 5px; /* Decreased gap between charts */
+  overflow: hidden;
+}
+/* CSS for the overall charts container */
+.overall-charts {
+  display: flex; /* Arrange children in a row */
+  justify-content: space-around; /* Evenly space the charts */
+  align-items: center; /* Align items vertically */
+  margin-top: 20px; /* Adjust spacing from top */
+  padding: 10px; /* Add padding around the charts */
+  background-color: #f9f9f9; /* Optional background color */
+  border-top: 2px solid #ddd; /* Optional border styling */
+}
+
+/* Individual chart styles */
+.chart {
+  width: 30%; /* Each chart takes up 30% of the width */
+  text-align: center; /* Center-align the text inside */
+  margin: 0 10px; /* Add horizontal spacing between charts */
+}
+
+

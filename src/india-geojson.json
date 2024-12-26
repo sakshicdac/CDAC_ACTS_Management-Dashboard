@@ -1,0 +1,61 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": { "NAME_1": "Nashik" },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [73.7905, 20.0118]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": { "NAME_1": "Navi Mumbai" },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [73.0222, 19.0305]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": { "NAME_1": "Bhilai" },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [81.3748, 21.2118]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": { "NAME_1": "Sangli" },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [74.5952, 16.8521]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": { "NAME_1": "Solapur" },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [75.9043, 17.6732]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": { "NAME_1": "Satara" },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [73.9985, 17.6887]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": { "NAME_1": "Ambejogai" },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [76.3887, 18.7483]
+      }
+    }
+  ]
+}
