@@ -136,6 +136,26 @@ app.get("/api/course-highest-enrollment", async (req, res) => {
   }
 });
 
+// API for educational qualifications
+app.get('/api/educational-qualifications', async (req, res) => {
+  try {
+    const query = `
+      SELECT qc.qual_course_name, 
+             COUNT(psq.pgd_stu_qual_id) AS qualification_count
+      FROM pgd_stu_reg_qual psq
+      JOIN m_qual_course qc
+        ON psq.pgd_stu_qual_id = qc.qual_course_id
+      GROUP BY qc.qual_course_name 
+      ORDER BY qualification_count DESC;
+    `;
+    const [rows] = await promisePool.query(query);
+    res.json(rows);
+  } catch (err) {
+    console.error("Error fetching educational qualifications:", err);
+    res.status(500).json({ error: "Failed to fetch educational qualifications data" });
+  }
+});
+
 // API for gender breakdown by course and batch - correct output
 app.get('/api/gender-breakdown', async (req, res) => {
   const { course_id, batch_id } = req.query;
@@ -231,52 +251,42 @@ app.get('/api/batch-selection', async (req, res) => {
   }
 });
 
-// Endpoint to fetch gender classification data
-app.get('/api/gender-classification', async (req, res) => {
-  const { centre_id, course_id, batch_id } = req.query;
-
-  const query = `
-      SELECT 
-          a.pgd_trng_centre_id AS centre_id,
-          a.pgd_trng_id AS course_id,
-          a.pgd_batch_id AS batch_id,
-          CASE 
-              WHEN a.pgd_stu_gender_id = 'UR_002' THEN 'Male'
-              WHEN a.pgd_stu_gender_id = 'UR_001' THEN 'Female'
-              ELSE 'Other'
-          END AS gender,
-          COUNT(DISTINCT a.pgd_form_no) AS gender_count
-      FROM 
-          pgd_stu_reg_data a
-      WHERE 
-          a.pgd_stu_reg_is_valid = 1
-          AND (? IS NULL OR ? = 'ALL' OR a.pgd_trng_centre_id = ?)
-          AND (? IS NULL OR ? = 'ALL' OR a.pgd_trng_id = ?)
-          AND (? IS NULL OR ? = 'ALL' OR a.pgd_batch_id = ?)
-      GROUP BY 
-          a.pgd_trng_centre_id,
-          a.pgd_trng_id,
-          a.pgd_batch_id,
-          gender
-      ORDER BY 
-          a.pgd_trng_centre_id,
-          a.pgd_trng_id,
-          a.pgd_batch_id,
-          gender_count DESC;
+// API for gender distribution
+app.get('/api/gender-distribution', async (req, res) => {
+  const { course_id, batch_id, centre_id } = req.query;
+  let query = `
+    SELECT 
+      COALESCE(pgd_stu_gender_id) AS gender,
+      COUNT(*) AS count
+    FROM pgd_stu_reg_data
   `;
+  const conditions = [];
+  const params = [];
+
+  if (course_id) {
+    conditions.push('pgd_trng_id = ?');
+    params.push(course_id);
+  }
+  if (batch_id) {
+    conditions.push('pgd_batch_id = ?');
+    params.push(batch_id);
+  }
+  if (centre_id) {
+    conditions.push('pgd_trng_centre_id = ?');
+    params.push(centre_id);
+  }
+
+  if (conditions.length > 0) {
+    query += ' WHERE ' + conditions.join(' AND ');
+  }
+
+  query += ' GROUP BY pgd_stu_gender_id';
 
   try {
-      // Execute the query with dynamic filters
-      const [rows] = await pool.execute(query, [
-          centre_id, centre_id, centre_id,
-          course_id, course_id, course_id,
-          batch_id, batch_id, batch_id,
-      ]);
-
-      res.json(rows); // Respond with the query result
+    const [rows] = await promisePool.query(query, params);
+    res.json(rows);
   } catch (err) {
-      console.error('Database query error:', err.message);
-      res.status(500).json({ error: 'Internal Server Error' });
+    res.status(500).json({ error: 'Error fetching gender distribution' });
   }
 });
 
@@ -298,3 +308,4 @@ app.get('/api/city-coordinates', (req, res) => {
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
+
